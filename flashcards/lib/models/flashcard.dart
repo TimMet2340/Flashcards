@@ -12,6 +12,13 @@ class Flashcard {
   });
   //String get text => _text.toUpperCase()
 
+  // placeholder card quickly add them - will be used in case of not null/ for null safety
+  static Flashcard placeholder = Flashcard(
+      id: 0,
+      question: 'Ist das Leben ein rekursiver Prozess?', 
+      awnser: 'Ja, zum einem, da Menschen sich aufs unbestimmte reproduieren. Zum anderen da Sie wiederholt ihren Tagesablauf ausführen solange die Bedingung: "Leben" erfüllt ist und mit dem beenden eines Tages stets einen neuen Einleiten'
+  );
+
   // creating flashcard with it's constructor from existing map typa source (for json)
   factory Flashcard.fromMap(Map<String, dynamic> map) {
     return Flashcard( // calling the constructorasdfasdf
