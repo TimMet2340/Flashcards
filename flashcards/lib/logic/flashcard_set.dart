@@ -12,7 +12,7 @@ class FlashcardSet {
   FlashcardSet ({
     required this.name,
     List<Flashcard>? cards, // at first asked for the unbound paramter cards - can be null
-  }) : this.cards = cards ?? [Flashcard.placeholder]; // : x = x - set x as input x; ?? - if null set the stuff behind
+  }) : this.cards = cards ?? [Flashcard.placeholder] ; // : x = x - set x as input x; ?? - if null set the stuff behind
 
   //add flashcard to the Set
   // @override
@@ -24,7 +24,7 @@ class FlashcardSet {
     cards.add(card);
   }*/
 
-  // get amount of all added cards
+  // get amount of all cards
   //int getAmount() { return cards.length; }
 
   // get an List of all remembered card objs
@@ -74,7 +74,7 @@ class FlashcardSet {
     return FlashcardSet( // calling the constructorasdfasdf
       name: 'name',
       cards: List<Flashcard>.from(
-        map['cards'].map((c) => Flashcard.fromMap(map))
+        map['cards'].map((c) => Flashcard.fromMap(map as Map<String, dynamic>))
       ),
       // cards.map((c) => c.toMap()).toList(),
     );
