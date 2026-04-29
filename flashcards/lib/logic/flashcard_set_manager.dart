@@ -1,4 +1,4 @@
-import 'package:flashcards/logic/flashcard_set.dart';
+import 'package:flashcards/models/flashcard_set.dart';
 import 'dart:convert'; // convert methods for json
 import 'dart:html';
 
