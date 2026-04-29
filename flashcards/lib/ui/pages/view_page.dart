@@ -1,3 +1,4 @@
+import 'package:flashcards/ui/widgets/flashcard_widget.dart';
 import 'package:flashcards/ui/widgets/progress_bar.dart';
 import 'package:flutter/material.dart';
 
@@ -8,10 +9,12 @@ class ViewPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBar(context, 120.0),
-      bottomNavigationBar: bottomNavBar(),
+      body: FlashcardWidget(),
+      bottomNavigationBar: SafeArea(child: bottomNavBar(), bottom: true),
     );
   }
 
+  // methods defining the appBar and it's child elements
   PreferredSize appBar(BuildContext context, double height) {
     return PreferredSize(
       preferredSize: const Size.fromHeight(150.0),
@@ -30,7 +33,7 @@ class ViewPage extends StatelessWidget {
           actions: [editButton()],
           bottom: PreferredSize(
             preferredSize: const Size.fromWidth(1.0),
-            child: ProgressBar(total: 5, current: 2),
+            child: ProgressBar(total: 5, current: 4),
           ),
         ),
       ),
@@ -64,28 +67,66 @@ class ViewPage extends StatelessWidget {
     );
   }
 
+  // methods defining the bottom navigation bar and it's child elements
   Widget bottomNavBar() {
-    return Container(
-      margin: EdgeInsets.only(left: 30.0, right: 30.0, bottom: 8.0),
-      padding: EdgeInsets.all(5.0),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        color: const Color.fromARGB(76, 96, 125, 139),
+    return UnconstrainedBox(
+      child: Container(
+        margin: EdgeInsets.only(left: 30.0, right: 30.0, bottom: 15.0),
+        padding: EdgeInsets.all(5.0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          color: const Color.fromARGB(76, 96, 125, 139),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          spacing: 5.0,
+          children: [
+            navigationButton(false),
+            Text('zurück'),
+            Container(
+              margin: EdgeInsets.only(left: 8.0, right: 8.0),
+              width: 5.0,
+              height: 40,
+              decoration: BoxDecoration(
+                color: const Color.fromARGB(69, 0, 0, 0),
+                shape: BoxShape.rectangle,
+                borderRadius: BorderRadius.circular(3.0),
+              ),
+            ),
+            Text('weiter'),
+            navigationButton(true),
+          ],
+        ),
       ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          IconButton(
-            onPressed: () => print('vorherige Karte'),
-            icon: Icon(Icons.arrow_left),
-          ),
-          IconButton(
-            onPressed: () => print('vorherige Karte'),
-            icon: Icon(Icons.arrow_right),
-          ),
-        ],
+    );
+  }
+
+  IconButton navigationButton(bool next) {
+    return IconButton(
+      tooltip: next ? 'Zur nächsten Karte' : 'Zur vorherigen Karte',
+      style: ButtonStyle(
+        shape: WidgetStateProperty.resolveWith((Set<WidgetState> states) {
+          if (states.contains(WidgetState.hovered)) {
+            return RoundedRectangleBorder(
+              borderRadius: BorderRadiusGeometry.circular(20.0),
+            );
+          }
+          return CircleBorder();
+        }),
+        backgroundColor: WidgetStateColor.resolveWith((
+          Set<WidgetState> states,
+        ) {
+          if (states.contains(WidgetState.pressed)) {
+            return Colors.black;
+          }
+          return Color(0xff4F4E55);
+        }),
       ),
+      onPressed: () => print('druchgewechselt'),
+      icon: next ? Icon(Icons.arrow_right) : Icon(Icons.arrow_left),
+      color: Colors.white,
+      iconSize: 40.0,
     );
   }
 }
