@@ -1,15 +1,24 @@
+import 'package:flashcards/models/flashcard.dart';
+import 'package:flashcards/ui/widgets/flashcard_set_widget.dart';
 import 'package:flashcards/ui/widgets/flashcard_widget.dart';
 import 'package:flashcards/ui/widgets/progress_bar.dart';
 import 'package:flutter/material.dart';
 
 class ViewPage extends StatelessWidget {
-  const ViewPage({super.key});
+  final FlashcardSetWidget cards = FlashcardSetWidget(
+    cards: [
+      FlashcardWidget(),
+      FlashcardWidget(question: 'Was?', awnser: 'das!'),
+    ],
+  );
+
+  ViewPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBar(context, 120.0),
-      body: FlashcardWidget(),
+      body: this.cards,
       bottomNavigationBar: SafeArea(child: bottomNavBar(), bottom: true),
     );
   }
@@ -33,7 +42,7 @@ class ViewPage extends StatelessWidget {
           actions: [editButton()],
           bottom: PreferredSize(
             preferredSize: const Size.fromWidth(1.0),
-            child: ProgressBar(total: 5, current: 4),
+            child: ProgressBar(total: 5, current: 2),
           ),
         ),
       ),
@@ -123,7 +132,7 @@ class ViewPage extends StatelessWidget {
           return Color(0xff4F4E55);
         }),
       ),
-      onPressed: () => print('druchgewechselt'),
+      onPressed: () => next ? cards.nextCard() : cards.previousCard(),
       icon: next ? Icon(Icons.arrow_right) : Icon(Icons.arrow_left),
       color: Colors.white,
       iconSize: 40.0,

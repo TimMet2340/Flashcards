@@ -31,9 +31,7 @@ class _HomePageState extends State<HomePage> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  CupertinoPageRoute<void>(
-                    builder: (context) => const ViewPage(),
-                  ),
+                  CupertinoPageRoute<void>(builder: (context) => ViewPage()),
                 );
               },
               child: const Text('view page'),
