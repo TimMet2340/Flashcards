@@ -37,5 +37,11 @@ class _FlashcardSetWidgetState extends State<FlashcardSetWidget> {
     );
   }
 
+  @override
+  void dispose() {
+    widget._controller.dispose();
+    super.dispose();
+  }
+
   // TODO Dispose animation controller
 }
