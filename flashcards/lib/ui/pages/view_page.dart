@@ -18,8 +18,8 @@ class ViewPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBar(context, 120.0),
-      body: this.cards,
-      bottomNavigationBar: SafeArea(child: bottomNavBar(), bottom: true),
+      body: cards,
+      bottomNavigationBar: SafeArea(bottom: true, child: bottomNavBar()),
     );
   }
 

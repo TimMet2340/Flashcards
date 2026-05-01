@@ -19,14 +19,14 @@ class ProgressBar extends StatelessWidget {
           double width = constraints.maxWidth * 0.5;
 
           if (constraints.maxWidth < 500) {
-            return Container(
+            return SizedBox(
               width: width,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Row(
-                    children: [marker(false, 6), marker(true, 9)],
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [marker(false, 6), marker(true, 9)],
                   ),
                   line(width, progress),
                 ],
