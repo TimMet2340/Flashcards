@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
+import 'package:auto_size_text/auto_size_text.dart';
 
 class FlashcardWidget extends StatefulWidget {
   final String question;
@@ -154,7 +155,15 @@ class _FlashcardWidgetState extends State<FlashcardWidget>
             ),
             borderRadius: BorderRadius.circular(60.0),
           ),
-          child: Text(title, style: TextStyle(fontSize: 30.0)),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: AutoSizeText(
+              title,
+              style: TextStyle(fontSize: 30.0),
+              textAlign: TextAlign.center,
+              maxLines: 5,
+            ),
+          ),
         );
       },
     );

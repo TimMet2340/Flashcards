@@ -16,11 +16,11 @@ class FlashcardSet {
     cards, // at first asked for the unbound paramter cards - can be null
     // attention: cards array suposed to be null, when creating a set, but can be set nativly set
     // for creating a set from existing data factory method: from Map() was implemented
-  }) : cards = cards ?? [Flashcard.placeholder]
+  }) : cards = cards ?? [Flashcard.placeholder, Flashcard.placeholder2]
   // : x = x - set x as input x; ?? - if null set the stuff behind
   // body of constructor for setting nextId if cards array given
   {
-    if (this.cards.length != 1) {
+    if (this.cards.length != 1 || this.cards[0] != Flashcard.placeholder) {
       nextId = this.cards.length;
     }
   }

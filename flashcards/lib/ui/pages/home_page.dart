@@ -1,3 +1,4 @@
+import 'package:flashcards/logic/flashcard_set_manager.dart';
 import 'package:flashcards/ui/pages/view_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +11,15 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  // Zugriff auf das Singleton, factory prozedur flashcard set manager
+  final manager = FlashcardSetManager();
+
+  @override
+  void initState() {
+    super.initState();
+    manager.importAll(); // Einmalig beim Start laden
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,12 +39,19 @@ class _HomePageState extends State<HomePage> {
             ),
             ElevatedButton(
               onPressed: () {
+                if (manager.allSets.isEmpty) {
+                  manager.addSet("Mein erstes Set");
+                }
+
                 Navigator.push(
                   context,
-                  CupertinoPageRoute<void>(builder: (context) => ViewPage()),
+                  CupertinoPageRoute(
+                    builder: (context) =>
+                        ViewPage(currentSet: manager.allSets[0]),
+                  ),
                 );
               },
-              child: const Text('view page'),
+              child: const Text('Lernen starten'),
             ),
           ],
         ),

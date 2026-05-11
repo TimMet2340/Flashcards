@@ -1,38 +1,70 @@
-import 'package:flashcards/models/flashcard.dart';
+import 'package:flashcards/models/flashcard_set.dart';
 import 'package:flashcards/ui/widgets/flashcard_set_widget.dart';
 import 'package:flashcards/ui/widgets/flashcard_widget.dart';
 import 'package:flashcards/ui/widgets/progress_bar.dart';
 import 'package:flutter/material.dart';
 
 class ViewPage extends StatelessWidget {
-  final FlashcardSetWidget cards = FlashcardSetWidget(
+  /* final FlashcardSetWidget cardsTemplate = FlashcardSetWidget(
     cards: [
       FlashcardWidget(),
       FlashcardWidget(question: 'Was?', awnser: 'das!'),
     ],
-  );
+  ); */
 
-  ViewPage({super.key});
+  final FlashcardSet currentSet;
+
+  const ViewPage({super.key, required this.currentSet});
 
   @override
   Widget build(BuildContext context) {
+    // maps (singleton -> set ->) cards with a widget that displays its content and warps them into a list
+    final List<FlashcardWidget> flashcardWidgets = currentSet.cards.map((card) {
+      return FlashcardWidget(
+        question: card.question,
+        awnser: card.awnser ?? "Keine Antwort hinterlegt",
+        // Hier könnten wir später noch ein Callback für den Status-Update übergeben
+      );
+    }).toList();
+
+    //
+    final FlashcardSetWidget cardSetWidget = FlashcardSetWidget(
+      cards: flashcardWidgets,
+    );
+
+    // every element which you can see on the screen
     return Scaffold(
-      appBar: appBar(context, 120.0),
-      body: cards,
-      bottomNavigationBar: SafeArea(bottom: true, child: bottomNavBar()),
+      appBar: appBar(
+        context,
+        120.0,
+        currentSet.name,
+        currentSet.cards.length,
+        (currentSet.getAmountRemebered() + currentSet.getAmountUnremebered()),
+      ),
+      body: cardSetWidget,
+      bottomNavigationBar: SafeArea(
+        bottom: true,
+        child: bottomNavBar(cardSetWidget),
+      ),
     );
   }
 
+  // ===========================================================================
   // methods defining the appBar and it's child elements
-  PreferredSize appBar(BuildContext context, double height) {
+  // ===========================================================================
+  PreferredSize appBar(
+    BuildContext context,
+    double height,
+    String title,
+    int totalProgress,
+    int currentProgress,
+  ) {
     return PreferredSize(
       preferredSize: const Size.fromHeight(150.0),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: AppBar(
-          title: Text(
-            'Title der absolut lang ist um auszutesten ob alles funktioniert',
-          ),
+          title: Text(title),
           centerTitle: true,
           backgroundColor: Color.fromARGB(255, 235, 235, 235),
           shape: RoundedRectangleBorder(
@@ -42,7 +74,7 @@ class ViewPage extends StatelessWidget {
           actions: [editButton()],
           bottom: PreferredSize(
             preferredSize: const Size.fromWidth(1.0),
-            child: ProgressBar(total: 5, current: 2),
+            child: ProgressBar(total: totalProgress, current: currentProgress),
           ),
         ),
       ),
@@ -77,7 +109,7 @@ class ViewPage extends StatelessWidget {
   }
 
   // methods defining the bottom navigation bar and it's child elements
-  Widget bottomNavBar() {
+  Widget bottomNavBar(FlashcardSetWidget cardSetWidget) {
     return UnconstrainedBox(
       child: Container(
         margin: EdgeInsets.only(left: 30.0, right: 30.0, bottom: 15.0),
@@ -91,7 +123,7 @@ class ViewPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           spacing: 5.0,
           children: [
-            navigationButton(false),
+            navigationButton(false, cardSetWidget),
             Text('zurück'),
             Container(
               margin: EdgeInsets.only(left: 8.0, right: 8.0),
@@ -104,14 +136,14 @@ class ViewPage extends StatelessWidget {
               ),
             ),
             Text('weiter'),
-            navigationButton(true),
+            navigationButton(true, cardSetWidget),
           ],
         ),
       ),
     );
   }
 
-  IconButton navigationButton(bool next) {
+  IconButton navigationButton(bool next, FlashcardSetWidget cardSetWidget) {
     return IconButton(
       tooltip: next ? 'Zur nächsten Karte' : 'Zur vorherigen Karte',
       style: ButtonStyle(
@@ -132,7 +164,8 @@ class ViewPage extends StatelessWidget {
           return Color(0xff4F4E55);
         }),
       ),
-      onPressed: () => next ? cards.nextCard() : cards.previousCard(),
+      onPressed: () =>
+          next ? cardSetWidget.nextCard() : cardSetWidget.previousCard(),
       icon: next ? Icon(Icons.arrow_right) : Icon(Icons.arrow_left),
       color: Colors.white,
       iconSize: 40.0,
