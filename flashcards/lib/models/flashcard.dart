@@ -1,14 +1,16 @@
+enum State { rememembered, unremembered, undefined }
+
 class Flashcard {
   int id;
   String question;
   String? awnser;
-  bool? remembered;
+  State state;
 
   Flashcard({
     required this.id,
     required this.question,
     this.awnser,
-    this.remembered,
+    this.state = State.undefined,
   });
   //String get text => _text.toUpperCase()
 
@@ -25,6 +27,10 @@ class Flashcard {
     awnser: 'Antwort!!!',
   );
 
+  void setState(bool remembered) {
+    remembered ? state = State.rememembered : State.unremembered;
+  }
+
   // creating flashcard with it's constructor from existing map typa source (for json)
   factory Flashcard.fromMap(Map<String, dynamic> map) {
     return Flashcard(
@@ -32,7 +38,7 @@ class Flashcard {
       id: map['id'],
       question: map['question'],
       awnser: map['awnser'],
-      remembered: map['remembered'],
+      state: State.values[map['state']],
     );
   }
 
@@ -42,7 +48,7 @@ class Flashcard {
       'id': id,
       'question': question,
       'awnser': awnser,
-      'remembered': remembered,
+      'state': state.index,
     };
   }
 }

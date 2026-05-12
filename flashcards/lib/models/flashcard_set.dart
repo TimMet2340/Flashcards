@@ -25,6 +25,10 @@ class FlashcardSet {
     }
   }
 
+  // ===========================================================================
+  // basic list operation
+  // ===========================================================================
+
   //add flashcard to the Set
   // @override
   void add(String question, String awnser) {
@@ -33,20 +37,28 @@ class FlashcardSet {
     nextId++;
   }
 
-  /* void add(Flashcard card) {
-    cards.add(card);
-  }*/
-
+  // remove
   void remove(int id) {
     cards.removeWhere((c) => c.id == id);
   }
 
+  void moveForward() {}
+
+  void moverBackward() {}
+
   // get amount of all cards
   //int getAmount() { return cards.length; }
 
+  // ===========================================================================
+  // methods for the cards state
+  // ===========================================================================
+
+  // change state
+  void setCardState(int id, bool remembered) {}
+
   // get an List of all remembered card objs
   List<Flashcard> getRemembered() {
-    return cards.where((c) => (c.remembered)).toList();
+    return cards.where((c) => (c.state == State.rememembered)).toList();
   }
 
   // get the amount of remembered card objs
@@ -56,13 +68,15 @@ class FlashcardSet {
 
   // get an List of all unremembered card objs
   List<Flashcard> getUnremembered() {
-    return cards.where((c) => !(c.remembered)).toList();
+    return cards.where((c) => !(c.state == State.unremembered)).toList();
   }
 
   // get the amount of unremembered card objs
   int getAmountUnremebered() {
     return getUnremembered().length;
   }
+
+  // ===========================================================================
 
   void sortCards() {
     cards.sort((a, b) => a.id.compareTo(b.id));
@@ -78,16 +92,11 @@ class FlashcardSet {
     return cardsCopy;
   }
 
-  void setCardState(int id, bool remembered) {}
-
-  /* void saveToDisk() {
-    List<Map> mappedCards = cards.map((c) => c.toMap()).toList();
-    String jsonString = jsonEncode(mappedCards);
-    window.localStorage['flashcards_data'] = jsonString;
-  } */
-
+  // ===========================================================================
   // following two methods: implemented to convert map set to List and the other way arround
   // needed for saving data as json - look at FlashcardSetManager for further information of the saving process
+  // ===========================================================================
+
   Map<String, dynamic> toMap() {
     return {'name': name, 'cards': cards.map((c) => c.toMap()).toList()};
   }
@@ -96,13 +105,10 @@ class FlashcardSet {
   factory FlashcardSet.fromMap(Map<String, dynamic> map) {
     return FlashcardSet(
       // calling the constructorasdfasdf
-      name: 'name',
-      cards: List<Flashcard>.from(
-        map['cards'].map((c) => Flashcard.fromMap(map)),
-      ),
+      name: map['name'],
+      cards: map['cards'].map((c) => Flashcard.fromMap(c)).toList(),
+      //attention List.from() forces everything into a hard typed list
       // cards.map((c) => c.toMap()).toList(),
     );
   }
-
-  // TODO editor mode can be activated inside die flashcardset view
 }

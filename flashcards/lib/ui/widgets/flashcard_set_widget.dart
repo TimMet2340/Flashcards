@@ -2,7 +2,7 @@ import 'package:flashcards/ui/widgets/flashcard_widget.dart';
 import 'package:flutter/material.dart';
 
 class FlashcardSetWidget extends StatefulWidget {
-  final List<FlashcardWidget>? cards;
+  List<FlashcardWidget>? cards;
   final PageController _controller = PageController();
   FlashcardSetWidget({super.key, this.cards});
 
@@ -18,6 +18,10 @@ class FlashcardSetWidget extends StatefulWidget {
       duration: Duration(milliseconds: 200),
       curve: Curves.bounceOut,
     );
+  }
+
+  void setCards(List<FlashcardWidget> cards) {
+    this.cards = cards;
   }
 
   @override

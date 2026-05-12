@@ -18,19 +18,23 @@ class ViewPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // empty widget to connect Flashcards with scroll method for flashcard
+    final FlashcardSetWidget cardSetWidget = FlashcardSetWidget(cards: []);
+
     // maps (singleton -> set ->) cards with a widget that displays its content and warps them into a list
     final List<FlashcardWidget> flashcardWidgets = currentSet.cards.map((card) {
       return FlashcardWidget(
         question: card.question,
         awnser: card.awnser ?? "Keine Antwort hinterlegt",
-        // Hier könnten wir später noch ein Callback für den Status-Update übergeben
+        onSwipe: (isRight) {
+          isRight ? card.setState(true) : card.setState(false);
+          cardSetWidget.nextCard();
+        },
       );
     }).toList();
 
-    //
-    final FlashcardSetWidget cardSetWidget = FlashcardSetWidget(
-      cards: flashcardWidgets,
-    );
+    // give cards to widget
+    cardSetWidget.setCards(flashcardWidgets);
 
     // every element which you can see on the screen
     return Scaffold(

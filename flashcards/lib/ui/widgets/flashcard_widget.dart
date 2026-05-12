@@ -5,10 +5,12 @@ import 'package:auto_size_text/auto_size_text.dart';
 class FlashcardWidget extends StatefulWidget {
   final String question;
   final String awnser;
+  final Function(bool)? onSwipe;
   const FlashcardWidget({
     super.key,
     this.question = 'Frage???',
     this.awnser = 'Antwort!!!',
+    this.onSwipe,
   });
 
   @override
@@ -23,6 +25,7 @@ class _FlashcardWidgetState extends State<FlashcardWidget>
   Offset _dragOffset = Offset.zero;
   late AnimationController _controller;
 
+  // NNNNEEINNN
   //sleep(Duration(milliseconds: 250))
 
   @override
@@ -72,14 +75,20 @@ class _FlashcardWidgetState extends State<FlashcardWidget>
       onHorizontalDragEnd: (details) {
         // print(details.globalPosition.toString());
 
-        // state for an remmebered card
+        // state for an remmebered card / right swipe
         if (_dragOffset.dx > 150) {
           // print('forward');
           _controller.forward();
+          widget.onSwipe != null
+              ? widget.onSwipe!(true)
+              : null; // true - right swipe
           // state for an unremembered card
         } else if (_dragOffset.dx < -150) {
           // print('backwards');
           _controller.reverse();
+          widget.onSwipe != null
+              ? widget.onSwipe!(false)
+              : null; // false - left swipe
         } else {
           // print('drag more');
           setState(() {
