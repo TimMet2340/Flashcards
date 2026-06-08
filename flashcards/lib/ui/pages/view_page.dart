@@ -2,6 +2,7 @@ import 'package:flashcards/models/flashcard_set.dart';
 import 'package:flashcards/ui/widgets/flashcard_set_widget.dart';
 import 'package:flashcards/ui/widgets/flashcard_widget.dart';
 import 'package:flashcards/ui/widgets/progress_bar.dart';
+import 'package:flashcards/theme/theme_manager.dart';
 import 'package:flutter/material.dart';
 
 class ViewPage extends StatefulWidget {
@@ -25,7 +26,7 @@ class _ViewPageState extends State<ViewPage> {
   @override
   Widget build(BuildContext context) {
     // =========================================================================
-    // conntection between logic and ui
+    // conntection between logic/backend and ui
     // =========================================================================
 
     // empty widget to connect Flashcards with scroll method for flashcard
@@ -97,12 +98,24 @@ class _ViewPageState extends State<ViewPage> {
         child: AppBar(
           title: Text(title),
           centerTitle: true,
-          backgroundColor: Color.fromARGB(255, 235, 235, 235),
+          backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadiusGeometry.all(Radius.circular(20)),
           ),
           leading: backButton(context),
-          actions: [editButton()],
+          actions: [
+            editButton(),
+            ValueListenableBuilder<bool>(
+              valueListenable: ThemeManager().isDarkMode,
+              builder: (context, isDark, child) {
+                return IconButton(
+                  tooltip: isDark ? 'Light Mode' : 'Dark Mode',
+                  onPressed: () => ThemeManager().toggleTheme(),
+                  icon: Icon(isDark ? Icons.light_mode : Icons.dark_mode),
+                );
+              },
+            ),
+          ],
           bottom: PreferredSize(
             preferredSize: const Size.fromWidth(1.0),
             child: ProgressBar(
@@ -134,7 +147,7 @@ class _ViewPageState extends State<ViewPage> {
       child: Container(
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: Color.fromARGB(227, 172, 172, 172),
+          color: Theme.of(context).colorScheme.surface.withOpacity(0.9),
         ),
         padding: EdgeInsets.all(6.0),
         margin: EdgeInsets.all(5.0),
@@ -152,7 +165,7 @@ class _ViewPageState extends State<ViewPage> {
         padding: EdgeInsets.all(5.0),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
-          color: const Color.fromARGB(76, 96, 125, 139),
+          color: Theme.of(context).colorScheme.primary.withOpacity(0.12),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -195,15 +208,15 @@ class _ViewPageState extends State<ViewPage> {
           Set<WidgetState> states,
         ) {
           if (states.contains(WidgetState.pressed)) {
-            return Colors.black;
+            return Theme.of(context).colorScheme.primary.withOpacity(0.9);
           }
-          return Color(0xff4F4E55);
+          return Theme.of(context).colorScheme.primary;
         }),
       ),
       onPressed: () =>
           next ? cardSetWidget.nextCard() : cardSetWidget.previousCard(),
       icon: next ? Icon(Icons.arrow_right) : Icon(Icons.arrow_left),
-      color: Colors.white,
+      color: Theme.of(context).colorScheme.onPrimary,
       iconSize: 40.0,
     );
   }

@@ -49,9 +49,19 @@ class _FlashcardWidgetState extends State<FlashcardWidget>
             height: 50.0,
             width: 50.0,
             decoration: BoxDecoration(
-              color: _rememberedState ? Color(0xff137D20) : Color(0xffCE0F22),
+              color: _rememberedState
+                  ? Theme.of(context).colorScheme.secondary
+                  : Theme.of(context).colorScheme.error,
             ),
-            child: _rememberedState ? Icon(Icons.check) : Icon(Icons.close),
+            child: _rememberedState
+                ? Icon(
+                    Icons.check,
+                    color: Theme.of(context).colorScheme.onSecondary,
+                  )
+                : Icon(
+                    Icons.close,
+                    color: Theme.of(context).colorScheme.onError,
+                  ),
           ),
         ),
         cardDrag(),
@@ -155,10 +165,14 @@ class _FlashcardWidgetState extends State<FlashcardWidget>
           // TODO sized box
           margin: EdgeInsets.all(20.0),
           decoration: BoxDecoration(
-            // boxShadow: List.filled(length, fill),
-            border: Border.all(color: const Color.fromARGB(101, 0, 0, 0)),
+            border: Border.all(
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.15),
+            ),
             gradient: LinearGradient(
-              colors: [Colors.white, Color.fromARGB(125, 87, 83, 83)],
+              colors: [
+                Theme.of(context).cardColor,
+                Theme.of(context).colorScheme.shadow.withOpacity(0.25),
+              ],
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
             ),

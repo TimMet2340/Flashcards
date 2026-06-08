@@ -35,11 +35,11 @@ class ProgressBar extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      marker(false, unrememberedAmount),
-                      marker(true, rememberedAmount),
+                      marker(context, false, unrememberedAmount),
+                      marker(context, true, rememberedAmount),
                     ],
                   ),
-                  line(width, progress),
+                  line(context, width, progress),
                 ],
               ),
             );
@@ -48,9 +48,9 @@ class ProgressBar extends StatelessWidget {
               spacing: 7.0,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                marker(false, 6),
-                line(width, progress),
-                marker(true, 9),
+                marker(context, false, 6),
+                line(context, width, progress),
+                marker(context, true, 9),
               ],
             );
           }
@@ -59,7 +59,7 @@ class ProgressBar extends StatelessWidget {
     );
   }
 
-  Padding line(double width, double progress) {
+  Padding line(BuildContext context, double width, double progress) {
     return Padding(
       padding: const EdgeInsets.all(3.0),
       child: Stack(
@@ -68,7 +68,7 @@ class ProgressBar extends StatelessWidget {
             height: 12,
             width: width,
             decoration: BoxDecoration(
-              color: const Color.fromARGB(115, 96, 125, 139),
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.12),
               borderRadius: BorderRadius.circular(10),
             ),
           ),
@@ -77,7 +77,7 @@ class ProgressBar extends StatelessWidget {
             width: width * progress,
             height: 12,
             decoration: BoxDecoration(
-              color: Colors.blueGrey,
+              color: Theme.of(context).colorScheme.primary,
               borderRadius: BorderRadius.circular(10),
             ),
           ),
@@ -86,11 +86,13 @@ class ProgressBar extends StatelessWidget {
     );
   }
 
-  Container marker(bool remembered, int amount) {
+  Container marker(BuildContext context, bool remembered, int amount) {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
-        color: remembered ? Color(0xff137D20) : Color(0xffCE0F22),
+        color: remembered
+            ? Theme.of(context).colorScheme.secondary
+            : Theme.of(context).colorScheme.error,
       ),
       padding: EdgeInsets.only(left: 10.0, right: 10.0),
       margin: EdgeInsets.all(5.0),
@@ -101,11 +103,14 @@ class ProgressBar extends StatelessWidget {
           Icon(
             remembered ? Icons.check : Icons.close,
             size: 18.0,
-            color: Colors.white,
+            color: Theme.of(context).colorScheme.onSecondary,
           ),
           Text(
             amount.toString(),
-            style: TextStyle(fontSize: 18, color: Colors.white),
+            style: TextStyle(
+              fontSize: 18,
+              color: Theme.of(context).colorScheme.onSecondary,
+            ),
           ),
         ],
       ),

@@ -42,7 +42,7 @@ samples, guidance on mobile development, and a full API reference.
 
 ## Testing and analysation
 
-`flutter analyze`: ...
+`flutter analyze`: efficient way to find errors in the code directly from the terminal
 
 `flutter test`: ...
 
