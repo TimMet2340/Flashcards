@@ -4,8 +4,16 @@ class ProgressBar extends StatelessWidget {
   // attributes
   final int total;
   final int current;
+  final int rememberedAmount;
+  final int unrememberedAmount;
 
-  const ProgressBar({super.key, required this.total, required this.current});
+  const ProgressBar({
+    super.key,
+    required this.total,
+    required this.current,
+    required this.rememberedAmount,
+    required this.unrememberedAmount,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +34,10 @@ class ProgressBar extends StatelessWidget {
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [marker(false, 6), marker(true, 9)],
+                    children: [
+                      marker(false, unrememberedAmount),
+                      marker(true, rememberedAmount),
+                    ],
                   ),
                   line(width, progress),
                 ],

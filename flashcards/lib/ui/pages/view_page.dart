@@ -4,7 +4,7 @@ import 'package:flashcards/ui/widgets/flashcard_widget.dart';
 import 'package:flashcards/ui/widgets/progress_bar.dart';
 import 'package:flutter/material.dart';
 
-class ViewPage extends StatelessWidget {
+class ViewPage extends StatefulWidget {
   /* final FlashcardSetWidget cardsTemplate = FlashcardSetWidget(
     cards: [
       FlashcardWidget(),
@@ -12,21 +12,34 @@ class ViewPage extends StatelessWidget {
     ],
   ); */
 
+  // FlashcardSet instance of the logic
   final FlashcardSet currentSet;
 
   const ViewPage({super.key, required this.currentSet});
 
   @override
+  State<ViewPage> createState() => _ViewPageState();
+}
+
+class _ViewPageState extends State<ViewPage> {
+  @override
   Widget build(BuildContext context) {
+    // =========================================================================
+    // conntection between logic and ui
+    // =========================================================================
+
     // empty widget to connect Flashcards with scroll method for flashcard
     final FlashcardSetWidget cardSetWidget = FlashcardSetWidget(cards: []);
 
     // maps (singleton -> set ->) cards with a widget that displays its content and warps them into a list
-    final List<FlashcardWidget> flashcardWidgets = currentSet.cards.map((card) {
+    final List<FlashcardWidget> flashcardWidgets = widget.currentSet.cards.map((
+      card,
+    ) {
       return FlashcardWidget(
         question: card.question,
         awnser: card.awnser ?? "Keine Antwort hinterlegt",
         onSwipe: (isRight) {
+          // deklaring state of cards in logic here
           isRight ? card.setState(true) : card.setState(false);
           cardSetWidget.nextCard();
         },
@@ -36,25 +49,37 @@ class ViewPage extends StatelessWidget {
     // give cards to widget
     cardSetWidget.setCards(flashcardWidgets);
 
+    // =========================================================================
     // every element which you can see on the screen
+    // =========================================================================
     return Scaffold(
       appBar: appBar(
         context,
         120.0,
-        currentSet.name,
-        currentSet.cards.length,
-        (currentSet.getAmountRemebered() + currentSet.getAmountUnremebered()),
+        widget.currentSet.name,
+        widget.currentSet.cards.length,
+        (widget.currentSet.getAmountRemebered() +
+            widget.currentSet.getAmountUnremebered()),
+        widget.currentSet.getAmountRemebered(),
+        widget.currentSet.getAmountUnremebered(),
       ),
       body: cardSetWidget,
-      bottomNavigationBar: SafeArea(
-        bottom: true,
-        child: bottomNavBar(cardSetWidget),
+      bottomNavigationBar: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SafeArea(bottom: true, child: bottomNavBar(cardSetWidget)),
+          IconButton(
+            onPressed: () {
+              widget.currentSet.resetStates();
+              print('reset performed');
+            },
+            icon: Icon(Icons.replay),
+          ),
+        ],
       ),
     );
   }
 
-  // ===========================================================================
-  // methods defining the appBar and it's child elements
   // ===========================================================================
   PreferredSize appBar(
     BuildContext context,
@@ -62,6 +87,8 @@ class ViewPage extends StatelessWidget {
     String title,
     int totalProgress,
     int currentProgress,
+    int rememberedAmount,
+    int unrememberedAmount,
   ) {
     return PreferredSize(
       preferredSize: const Size.fromHeight(150.0),
@@ -78,7 +105,12 @@ class ViewPage extends StatelessWidget {
           actions: [editButton()],
           bottom: PreferredSize(
             preferredSize: const Size.fromWidth(1.0),
-            child: ProgressBar(total: totalProgress, current: currentProgress),
+            child: ProgressBar(
+              total: totalProgress,
+              current: currentProgress,
+              rememberedAmount: rememberedAmount,
+              unrememberedAmount: unrememberedAmount,
+            ),
           ),
         ),
       ),

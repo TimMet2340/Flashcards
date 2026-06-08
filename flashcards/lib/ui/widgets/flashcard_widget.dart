@@ -177,4 +177,10 @@ class _FlashcardWidgetState extends State<FlashcardWidget>
       },
     );
   }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 }

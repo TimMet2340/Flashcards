@@ -50,11 +50,16 @@ class FlashcardSet {
   //int getAmount() { return cards.length; }
 
   // ===========================================================================
-  // methods for the cards state
+  // methods for the cards state + amount
   // ===========================================================================
 
-  // change state
-  void setCardState(int id, bool remembered) {}
+  // change state -> implemented in Flashcard class
+  //void setCardState(int id, bool remembered) {}
+
+  // reset states
+  void resetStates() {
+    cards.map((c) => c.state = State.undefined);
+  }
 
   // get an List of all remembered card objs
   List<Flashcard> getRemembered() {
@@ -74,6 +79,14 @@ class FlashcardSet {
   // get the amount of unremembered card objs
   int getAmountUnremebered() {
     return getUnremembered().length;
+  }
+
+  List<Flashcard> getUndefined() {
+    return cards.where((c) => !(c.state == State.undefined)).toList();
+  }
+
+  int getAmountUndefined() {
+    return getUndefined().length;
   }
 
   // ===========================================================================

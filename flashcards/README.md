@@ -2,7 +2,20 @@
 
 A primitive App for the Creation of Learn Cards so called **Flashcards** divided in different Groups regar. In the following Doc. I will explain some of the main interactions wich should be possible for potential user of this Application.
 
-## Getting Started
+## Get started
+
+What's important when working on the project or reviewing it.
+
+> [!NOTE]
+> **Where is the code written?**
+> All the written dart files which are the base of the project are located in the `/lib` folder.
+> Every other folder exists for plattform specific konfiguration and else.
+
+**Installing the projects packages**
+To not encounter errors when running der project in debug mode it's nessesary to install the packages used in the project, which are located in the `pubspec.yaml`.
+Run following before debugging in the terminal to fetch all packages: `flutter pub get`
+
+### Further Material for Flutter
 
 This project is a starting point for a Flutter application.
 
@@ -18,26 +31,41 @@ samples, guidance on mobile development, and a full API reference.
 
 ## Important Flutter Commands
 
-### Creating the App
+## Run in development mode
 
-flutter build web: build single page website which can be runned with a webserver
+**In Visual Studio**
+1. choose plattform at the bottom right
+2. press F5 to start debug mode (with autorefresh, after changes)
+
+**From the terminal**
+1. flutter run -d [f.e. chrome or other plattforms]
+
+## Testing and analysation
+
+`flutter analyze`: ...
+
+`flutter test`: ...
+
+### Creating the App (building process for deployment)
+
+`flutter build web`: build single page website which can be runned with a webserver
     -> will be created in the build directory
     -> the web directory can be pulled from the gtihub directly onto a webserver
-flutter build apk -> build runable package file for android installation
+`flutter build apk`: build runable package file for android installation
 
-flutter flutter clean -> clean build directory
+`flutter flutter clean`: clean build directory
 
-### Edit Packages
+### Manage Packages
 
-flutter pub add <package_name>: Installs a package and automatically updates pubspec.yaml
+`flutter pub add <package_name>`: Installs a package and automatically updates pubspec.yaml
 
-flutter pub add -d <package_name>: Adds a package specifically as a development dependency
+`flutter pub add -d <package_name>`: Adds a package specifically as a development dependency
 
-flutter pub get: Fetches all packages declared in your pubspec.yaml file
+`flutter pub get`: Fetches all packages declared in your pubspec.yaml file
 
-flutter pub remove <package_name>: Uninstalls a package and strips it from pubspec.yaml
+`flutter pub remove <package_name>`: Uninstalls a package and strips it from pubspec.yaml
 
-flutter pub upgrade: Updates all project dependencies to their latest compatible versions
+`flutter pub upgrade`: Updates all project dependencies to their latest compatible versions
 
-flutter pub outdated: Analyzes dependencies to discover outdated versions and updates
+`flutter pub outdated`: Analyzes dependencies to discover outdated versions and updates
 
