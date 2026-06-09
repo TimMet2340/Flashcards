@@ -17,8 +17,6 @@ ThemeData lightTheme = ThemeData(
     onSecondary: Colors.white,
     error: _markerRed,
     onError: Colors.white,
-    background: _lightPurple,
-    onBackground: Colors.black,
     surface: Colors.white,
     onSurface: Colors.black,
     tertiary: _lightAppBar,
@@ -44,8 +42,6 @@ ThemeData darkTheme = ThemeData(
     onSecondary: Colors.black,
     error: _markerRed,
     onError: Colors.black,
-    background: Color(0xFF1B1226), // dark purple-ish
-    onBackground: Colors.white,
     surface: Color(0xFF2A2433),
     onSurface: Colors.white,
     tertiary: Color(0xFF2E2A36),

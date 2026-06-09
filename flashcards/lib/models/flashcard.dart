@@ -28,7 +28,11 @@ class Flashcard {
   );
 
   void setState(bool remembered) {
-    remembered ? state = State.rememembered : State.unremembered;
+    if (remembered) {
+      state = State.rememembered;
+    } else {
+      state = State.unremembered;
+    }
   }
 
   // creating flashcard with it's constructor from existing map typa source (for json)

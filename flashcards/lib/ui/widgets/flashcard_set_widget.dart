@@ -22,6 +22,20 @@ class FlashcardSetWidget extends StatefulWidget {
 
   void setCards(List<FlashcardWidget> cards) {
     this.cards = cards;
+    // If the controller is positioned beyond the new list, jump back to a valid page.
+    try {
+      if (_controller.hasClients) {
+        final currentPage =
+            _controller.page?.round() ?? _controller.initialPage;
+        if (cards.isEmpty) {
+          _controller.jumpToPage(0);
+        } else if (currentPage >= cards.length) {
+          _controller.jumpToPage(0);
+        }
+      }
+    } catch (_) {
+      // ignore any errors if controller isn't ready yet
+    }
   }
 
   @override
@@ -46,6 +60,4 @@ class _FlashcardSetWidgetState extends State<FlashcardSetWidget> {
     widget._controller.dispose();
     super.dispose();
   }
-
-  // TODO Dispose animation controller
 }

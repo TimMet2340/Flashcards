@@ -58,7 +58,10 @@ class FlashcardSet {
 
   // reset states
   void resetStates() {
-    cards.map((c) => c.state = State.undefined);
+    // ensure each card's state is set to undefined
+    for (var c in cards) {
+      c.state = State.undefined;
+    }
   }
 
   // get an List of all remembered card objs
@@ -73,7 +76,7 @@ class FlashcardSet {
 
   // get an List of all unremembered card objs
   List<Flashcard> getUnremembered() {
-    return cards.where((c) => !(c.state == State.unremembered)).toList();
+    return cards.where((c) => c.state == State.unremembered).toList();
   }
 
   // get the amount of unremembered card objs
@@ -82,7 +85,7 @@ class FlashcardSet {
   }
 
   List<Flashcard> getUndefined() {
-    return cards.where((c) => !(c.state == State.undefined)).toList();
+    return cards.where((c) => c.state == State.undefined).toList();
   }
 
   int getAmountUndefined() {

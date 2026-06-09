@@ -29,26 +29,32 @@ class _ViewPageState extends State<ViewPage> {
     // conntection between logic/backend and ui
     // =========================================================================
 
-    // empty widget to connect Flashcards with scroll method for flashcard
-    final FlashcardSetWidget cardSetWidget = FlashcardSetWidget(cards: []);
+    // maps (singleton -> set ->) only undefined cards with a widget that displays its content and warps them into a list
+    final List<FlashcardWidget> flashcardWidgets = widget.currentSet
+        .getUndefined()
+        .map((card) {
+          return FlashcardWidget(
+            question: card.question,
+            awnser: card.awnser ?? "Keine Antwort hinterlegt",
+            onSwipe: (isRight) {
+              // declare state of cards in logic here and rebuild to update UI
+              setState(() {
+                if (isRight) {
+                  card.setState(true);
+                } else {
+                  card.setState(false);
+                }
+              });
+            },
+          );
+        })
+        .toList();
 
-    // maps (singleton -> set ->) cards with a widget that displays its content and warps them into a list
-    final List<FlashcardWidget> flashcardWidgets = widget.currentSet.cards.map((
-      card,
-    ) {
-      return FlashcardWidget(
-        question: card.question,
-        awnser: card.awnser ?? "Keine Antwort hinterlegt",
-        onSwipe: (isRight) {
-          // deklaring state of cards in logic here
-          isRight ? card.setState(true) : card.setState(false);
-          cardSetWidget.nextCard();
-        },
-      );
-    }).toList();
-
-    // give cards to widget
-    cardSetWidget.setCards(flashcardWidgets);
+    // create the card set widget with the current undefined cards; use a key based on length
+    final FlashcardSetWidget cardSetWidget = FlashcardSetWidget(
+      key: ValueKey(widget.currentSet.getUndefined().length),
+      cards: flashcardWidgets,
+    );
 
     // =========================================================================
     // every element which you can see on the screen
@@ -71,8 +77,9 @@ class _ViewPageState extends State<ViewPage> {
           SafeArea(bottom: true, child: bottomNavBar(cardSetWidget)),
           IconButton(
             onPressed: () {
-              widget.currentSet.resetStates();
-              print('reset performed');
+              setState(() {
+                widget.currentSet.resetStates();
+              });
             },
             icon: Icon(Icons.replay),
           ),
