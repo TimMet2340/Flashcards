@@ -48,9 +48,9 @@ class ProgressBar extends StatelessWidget {
               spacing: 7.0,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                marker(context, false, 6),
+                marker(context, false, unrememberedAmount),
                 line(context, width, progress),
-                marker(context, true, 9),
+                marker(context, true, rememberedAmount),
               ],
             );
           }
