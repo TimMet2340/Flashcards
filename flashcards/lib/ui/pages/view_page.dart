@@ -23,6 +23,8 @@ class ViewPage extends StatefulWidget {
 }
 
 class _ViewPageState extends State<ViewPage> {
+  bool editMode = false;
+
   @override
   Widget build(BuildContext context) {
     // =========================================================================
@@ -110,19 +112,7 @@ class _ViewPageState extends State<ViewPage> {
             borderRadius: BorderRadiusGeometry.all(Radius.circular(20)),
           ),
           leading: backButton(context),
-          actions: [
-            editButton(),
-            ValueListenableBuilder<bool>(
-              valueListenable: ThemeManager().isDarkMode,
-              builder: (context, isDark, child) {
-                return IconButton(
-                  tooltip: isDark ? 'Light Mode' : 'Dark Mode',
-                  onPressed: () => ThemeManager().toggleTheme(),
-                  icon: Icon(isDark ? Icons.light_mode : Icons.dark_mode),
-                );
-              },
-            ),
-          ],
+          actions: [editElements(), themeButton()],
           bottom: PreferredSize(
             preferredSize: const Size.fromWidth(1.0),
             child: ProgressBar(
@@ -137,6 +127,19 @@ class _ViewPageState extends State<ViewPage> {
     );
   }
 
+  ValueListenableBuilder<bool> themeButton() {
+    return ValueListenableBuilder<bool>(
+      valueListenable: ThemeManager().isDarkMode,
+      builder: (context, isDark, child) {
+        return IconButton(
+          tooltip: isDark ? 'Light Mode' : 'Dark Mode',
+          onPressed: () => ThemeManager().toggleTheme(),
+          icon: Icon(isDark ? Icons.light_mode : Icons.dark_mode),
+        );
+      },
+    );
+  }
+
   IconButton backButton(BuildContext context) {
     return IconButton(
       icon: const Icon(Icons.arrow_back_ios_new, size: 20),
@@ -147,20 +150,88 @@ class _ViewPageState extends State<ViewPage> {
     );
   }
 
-  InkWell editButton() {
-    return InkWell(
-      customBorder: const CircleBorder(),
-      onTap: () => print("Edit mode"),
-      child: Container(
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: Theme.of(context).colorScheme.surface.withOpacity(0.9),
+  Widget editElements() {
+    return Row(
+      children: [
+        editButton(),
+        Visibility(
+          visible: this.editMode,
+          child: Row(
+            children: [moveButton(false), moveButton(true), deleteButton()],
+          ),
         ),
-        padding: EdgeInsets.all(6.0),
-        margin: EdgeInsets.all(5.0),
-        alignment: Alignment.center,
-        child: const Icon(Icons.edit, size: 25.0, color: Colors.black),
+      ],
+    );
+  }
+
+  IconButton deleteButton() {
+    return IconButton(
+      onPressed: () {
+        print("deleted");
+      },
+      icon: Icon(
+        Icons.delete,
+        size: 25.0,
+        color: Theme.of(context).colorScheme.error.withOpacity(0.9),
       ),
+      style: ButtonStyle(
+        shape: WidgetStateProperty.all<OutlinedBorder>(
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(33)),
+        ),
+        backgroundColor: WidgetStateProperty.all<Color>(
+          Theme.of(context).colorScheme.onError.withOpacity(0.9),
+        ),
+      ),
+      padding: EdgeInsets.all(6.0),
+      alignment: Alignment.center,
+    );
+  }
+
+  IconButton moveButton(bool right) {
+    return IconButton(
+      onPressed: () {
+        right ? print("moved to right") : print("moved to right");
+      },
+      tooltip: right ? "Rechts tauschen" : "Links tauschen",
+      icon: right
+          ? Icon(Icons.arrow_forward, size: 20.0)
+          : Icon(Icons.arrow_back, size: 20.0),
+      style: ButtonStyle(
+        shape: WidgetStateProperty.all<OutlinedBorder>(
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(33)),
+        ),
+        backgroundColor: WidgetStateProperty.all<Color>(
+          Theme.of(context).colorScheme.surface.withOpacity(0.9),
+        ),
+      ),
+      padding: EdgeInsets.all(6.0),
+      alignment: Alignment.center,
+    );
+  }
+
+  IconButton editButton() {
+    return IconButton(
+      onPressed: () {
+        setState(() {
+          this.editMode = !this.editMode;
+        });
+      },
+      tooltip: this.editMode
+          ? "Zurück zur Standardansicht"
+          : "Karten bearbeiten",
+      icon: editMode
+          ? Icon(Icons.edit_off, size: 25.0)
+          : Icon(Icons.edit, size: 25.0),
+      style: ButtonStyle(
+        shape: WidgetStateProperty.all<OutlinedBorder>(
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(33)),
+        ),
+        backgroundColor: WidgetStateProperty.all<Color>(
+          Theme.of(context).colorScheme.surface.withOpacity(0.9),
+        ),
+      ),
+      padding: EdgeInsets.all(6.0),
+      alignment: Alignment.center,
     );
   }
 
