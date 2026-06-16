@@ -1,16 +1,24 @@
+import 'package:auto_size_text_field/auto_size_text_field.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
-import 'package:auto_size_text/auto_size_text.dart';
 
 class FlashcardWidget extends StatefulWidget {
+  final bool editable;
+  final int id;
   final String question;
   final String awnser;
+  //final Flashcard? card;
+  final Function(bool, String)? onUpdate;
   final Function(bool)? onSwipe;
   const FlashcardWidget({
     super.key,
+    this.id = -1,
     this.question = 'Frage???',
     this.awnser = 'Antwort!!!',
+    this.onUpdate,
     this.onSwipe,
+    //this.card,
+    this.editable = false,
   });
 
   @override
@@ -23,7 +31,8 @@ class _FlashcardWidgetState extends State<FlashcardWidget>
   bool _markerVisibility = false;
   bool _rememberedState = true;
   Offset _dragOffset = Offset.zero;
-  late AnimationController _controller;
+  late AnimationController _animationController;
+  late TextEditingController _textController;
 
   // NNNNEEINNN
   //sleep(Duration(milliseconds: 250))
@@ -31,11 +40,30 @@ class _FlashcardWidgetState extends State<FlashcardWidget>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
+    _animationController = AnimationController(
       duration: const Duration(milliseconds: 400),
       vsync: this,
       value: 0.0,
     );
+    _textController = TextEditingController(
+      text: _isFront ? widget.question : widget.awnser,
+    );
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    _textController.dispose();
+    super.dispose();
+  }
+
+  @override
+  void didUpdateWidget(covariant FlashcardWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.question != widget.question ||
+        oldWidget.awnser != widget.awnser) {
+      _textController.text = _isFront ? widget.question : widget.awnser;
+    }
   }
 
   @override
@@ -88,14 +116,14 @@ class _FlashcardWidgetState extends State<FlashcardWidget>
         // state for an remmebered card / right swipe
         if (_dragOffset.dx > 150) {
           // print('forward');
-          _controller.forward();
+          _animationController.forward();
           widget.onSwipe != null
               ? widget.onSwipe!(true)
               : null; // true - right swipe
           // state for an unremembered card
         } else if (_dragOffset.dx < -150) {
           // print('backwards');
-          _controller.reverse();
+          _animationController.reverse();
           widget.onSwipe != null
               ? widget.onSwipe!(false)
               : null; // false - left swipe
@@ -116,17 +144,21 @@ class _FlashcardWidgetState extends State<FlashcardWidget>
 
   Widget cardMovingAnimation() {
     return SlideTransition(
-      position: Tween<Offset>(
-        begin: Offset.zero,
-        end: Offset(2.0, 0),
-      ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut)),
+      position: Tween<Offset>(begin: Offset.zero, end: Offset(2.0, 0)).animate(
+        CurvedAnimation(parent: _animationController, curve: Curves.easeOut),
+      ),
       child: cardRotation(),
     );
   }
 
   GestureDetector cardRotation() {
     return GestureDetector(
-      onTap: () => setState(() => _isFront = !_isFront),
+      onTap: () {
+        setState(() {
+          _isFront = !_isFront;
+          _textController.text = _isFront ? widget.question : widget.awnser;
+        });
+      },
       child: AnimatedSwitcher(
         duration: const Duration(milliseconds: 500),
         transitionBuilder: (child, animation) {
@@ -146,13 +178,13 @@ class _FlashcardWidgetState extends State<FlashcardWidget>
           );
         },
         child: _isFront
-            ? buildCard(widget.question, ValueKey('Front'))
-            : buildCard(widget.awnser, ValueKey('Back')),
+            ? buildCard(ValueKey('Front'))
+            : buildCard(ValueKey('Back')),
       ),
     );
   }
 
-  LayoutBuilder buildCard(String title, ValueKey key) {
+  LayoutBuilder buildCard(ValueKey key) {
     return LayoutBuilder(
       key: key,
       builder: (BuildContext context, BoxConstraints constraint) {
@@ -180,21 +212,26 @@ class _FlashcardWidgetState extends State<FlashcardWidget>
           ),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: AutoSizeText(
-              title,
-              style: TextStyle(fontSize: 30.0),
-              textAlign: TextAlign.center,
-              maxLines: 5,
+            child: Center(
+              child: AutoSizeTextField(
+                controller: _textController,
+                enabled: widget.editable,
+                style: TextStyle(fontSize: 30.0),
+                maxLines: 5,
+                fullwidth: true,
+                textAlign: TextAlign.center,
+                textAlignVertical: TextAlignVertical.center,
+                minFontSize: 20,
+                onChanged: (String newText) {
+                  if (widget.onUpdate != null) {
+                    widget.onUpdate!(_isFront, newText);
+                  }
+                },
+              ),
             ),
           ),
         );
       },
     );
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
   }
 }

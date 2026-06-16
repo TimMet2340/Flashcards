@@ -33,7 +33,10 @@ class _HomePageState extends State<HomePage> {
             const Text('Do You Remember?', style: TextStyle(fontSize: 30.0)),
             // TODO buttons class
             ElevatedButton(
-              onPressed: () => print('Tetstestfdasf'),
+              onPressed: () {
+                manager.init();
+                //manager.saveAll();
+              },
               onLongPress: null,
               child: const Text('Test Stuff'),
             ),
@@ -53,9 +56,26 @@ class _HomePageState extends State<HomePage> {
               },
               child: const Text('Lernen starten'),
             ),
+            listAllSets(context),
           ],
         ),
       ),
+    );
+  }
+
+  Column listAllSets(BuildContext context) {
+    return Column(
+      children: manager.allSets.map((s) {
+        return ElevatedButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              CupertinoPageRoute(builder: (context) => ViewPage(currentSet: s)),
+            );
+          },
+          child: Text(s.name),
+        );
+      }).toList(),
     );
   }
 }

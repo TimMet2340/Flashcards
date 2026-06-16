@@ -69,3 +69,22 @@ samples, guidance on mobile development, and a full API reference.
 
 `flutter pub outdated`: Analyzes dependencies to discover outdated versions and updates
 
+// Ensure card IDs are unique and positive. If incoming cards contain
+    // invalid (<=0) or duplicate IDs (e.g. both placeholders with id 0),
+    // reassign sequential IDs starting at 1. Otherwise set nextId to maxId+1.
+    if (this.cards.isNotEmpty) {
+      final ids = this.cards.map((c) => c.id).toList();
+      final hasInvalid = ids.any((id) => id <= 0) || ids.toSet().length != ids.length;
+      if (hasInvalid) {
+        int idCounter = 1;
+        for (var c in this.cards) {
+          c.id = idCounter++;
+        }
+        nextId = idCounter;
+      } else {
+        final maxId = ids.reduce((a, b) => a > b ? a : b);
+        nextId = maxId + 1;
+      }
+    } else {
+      nextId = 1;
+    }

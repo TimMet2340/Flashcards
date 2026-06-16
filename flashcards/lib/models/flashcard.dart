@@ -1,16 +1,16 @@
-enum State { rememembered, unremembered, undefined }
+enum CardState { rememembered, unremembered, undefined }
 
 class Flashcard {
   int id;
   String question;
   String? awnser;
-  State state;
+  CardState state;
 
   Flashcard({
     required this.id,
     required this.question,
     this.awnser,
-    this.state = State.undefined,
+    this.state = CardState.undefined,
   });
   //String get text => _text.toUpperCase()
 
@@ -22,16 +22,16 @@ class Flashcard {
         'Ja, zum einem, da Menschen sich aufs unbestimmte reproduieren. Zum anderen da Sie wiederholt ihren Tagesablauf ausführen solange die Bedingung: "Leben" erfüllt ist und mit dem beenden eines Tages stets einen neuen Einleiten',
   );
   static Flashcard placeholder2 = Flashcard(
-    id: 0,
+    id: 1,
     question: 'Frage???',
     awnser: 'Antwort!!!',
   );
 
   void setState(bool remembered) {
     if (remembered) {
-      state = State.rememembered;
+      state = CardState.rememembered;
     } else {
-      state = State.unremembered;
+      state = CardState.unremembered;
     }
   }
 
@@ -42,7 +42,7 @@ class Flashcard {
       id: map['id'],
       question: map['question'],
       awnser: map['awnser'],
-      state: State.values[map['state']],
+      state: CardState.values[map['state']],
     );
   }
 
@@ -54,5 +54,11 @@ class Flashcard {
       'awnser': awnser,
       'state': state.index,
     };
+  }
+
+  @override
+  String toString() {
+    String awnser = this.awnser ?? "empty";
+    return "[ $question, $awnser ]";
   }
 }

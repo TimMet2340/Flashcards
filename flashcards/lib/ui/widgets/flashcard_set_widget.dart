@@ -4,7 +4,10 @@ import 'package:flutter/material.dart';
 class FlashcardSetWidget extends StatefulWidget {
   List<FlashcardWidget>? cards;
   final PageController _controller = PageController();
-  FlashcardSetWidget({super.key, this.cards});
+
+  final ValueChanged<int>? onCardChanged;
+
+  FlashcardSetWidget({super.key, this.cards, this.onCardChanged});
 
   void nextCard() {
     _controller.nextPage(
@@ -38,6 +41,10 @@ class FlashcardSetWidget extends StatefulWidget {
     }
   }
 
+  void jumpToPage(int index) {
+    _controller.jumpToPage(index);
+  }
+
   @override
   State<FlashcardSetWidget> createState() => _FlashcardSetWidgetState();
 }
@@ -52,6 +59,11 @@ class _FlashcardSetWidgetState extends State<FlashcardSetWidget> {
       controller: widget._controller,
       physics: NeverScrollableScrollPhysics(),
       children: widget.cards ?? [],
+      onPageChanged: (index) {
+        if (widget.onCardChanged != null) {
+          widget.onCardChanged!(index);
+        }
+      },
     );
   }
 
