@@ -4,6 +4,7 @@ import 'package:flashcards/ui/widgets/flashcard_set_widget.dart';
 import 'package:flashcards/ui/widgets/flashcard_widget.dart';
 import 'package:flashcards/ui/widgets/progress_bar.dart';
 import 'package:flashcards/theme/theme_manager.dart';
+import 'package:flashcards/ui/widgets/theme_button.dart';
 import 'package:flutter/material.dart';
 import 'dart:developer';
 
@@ -190,8 +191,8 @@ class _ViewPageState extends State<ViewPage> {
           ),
           leading: backButton(context),
           actions: context.isCompact
-              ? [themeButton()]
-              : [editElements(cardSetWidget), themeButton()],
+              ? [const ThemeButton()]
+              : [editElements(cardSetWidget), const ThemeButton()],
           bottom: PreferredSize(
             preferredSize: const Size.fromWidth(1.0),
             child: ProgressBar(
@@ -203,19 +204,6 @@ class _ViewPageState extends State<ViewPage> {
           ),
         ),
       ),
-    );
-  }
-
-  ValueListenableBuilder<bool> themeButton() {
-    return ValueListenableBuilder<bool>(
-      valueListenable: ThemeManager().isDarkMode,
-      builder: (context, isDark, child) {
-        return IconButton(
-          tooltip: isDark ? 'Light Mode' : 'Dark Mode',
-          onPressed: () => ThemeManager().toggleTheme(),
-          icon: Icon(isDark ? Icons.light_mode : Icons.dark_mode),
-        );
-      },
     );
   }
 

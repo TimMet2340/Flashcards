@@ -2,8 +2,15 @@ import 'package:flashcards/ui/pages/home_page.dart';
 import 'package:flashcards/theme/app_theme.dart';
 import 'package:flashcards/theme/theme_manager.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter/foundation.dart';
 
 void main() {
+  LicenseRegistry.addLicense(() async* {
+    final String license = await rootBundle.loadString('google_fonts/OFL.txt');
+    yield LicenseEntryWithLineBreaks(<String>['google_fonts'], license);
+  });
+
   runApp(const MyApp());
 }
 

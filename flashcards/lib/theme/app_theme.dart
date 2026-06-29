@@ -53,5 +53,5 @@ ThemeData darkTheme = ThemeData(
     foregroundColor: Colors.white,
     elevation: 0,
   ),
-  cardColor: Color(0xFF2A2433),
+  cardColor: Color.fromARGB(255, 17, 14, 20),
 );
